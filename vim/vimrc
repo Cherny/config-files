@@ -1,0 +1,71 @@
+call plug#begin('~/.local/share/nvim/plugged')
+
+	" helper
+    Plug 'scrooloose/nerdcommenter'
+
+	" vision 
+	"Plug 'vim-airline/vim-airline'
+	Plug 'yggdroot/indentline'
+
+    " theme
+    Plug 'morhetz/gruvbox'
+call plug#end()
+
+" basic vim {
+    syntax on
+    set nu
+    set autoindent
+    set smartindent
+    set tabstop=4
+    set softtabstop=4
+    set shiftwidth=4
+    set cursorline
+
+    set background=dark
+    colorscheme gruvbox
+" }
+" window navigation {
+    nmap gh <C-W>h
+    nmap gj <C-W>j
+    nmap gk <C-W>k
+    nmap gl <C-W>l
+" }
+" search {
+    nnoremap <silent> <Leader>h <S-*>N
+    nnoremap <silent> <Leader><Esc> :noh<CR>
+" }
+" merge {
+
+	nnoremap <Leader>1 :diffget 1<cr>
+	nnoremap <Leader>2 :diffget 2<cr>
+	nnoremap <Leader>3 :diffget 3<cr>
+	nnoremap <Leader>4 :diffget 4<cr>
+" }
+" exit {
+	nnoremap <Leader>w :wqa!
+	nnoremap <Leader>q :qa!
+" }
+" commit {
+	let git_commit_file = ".vim/git_commit_file"
+	function Add_commit()
+		let msg = input("commit -")
+		let failed = writefile(["- ".l:msg], g:git_commit_file, "a")
+		echo "\nadd commit: ".l:msg
+	endfunction
+
+	function Dump_commit()
+		let lines = readfile(g:git_commit_file)
+		let failed = append(0, l:lines)
+		let failed = delete(g:git_commit_file)
+	endfunction
+
+	nnoremap <Leader>m :call Add_commit()<cr>
+	command -nargs=0 DumpGitCC call Dump_commit()
+
+	function Git_Add()
+		echo '!git add '.expand('%:p')
+		execute '!git add '.expand('%:p')
+	endfunction
+
+	nnoremap <Leader>ga :call Git_Add()<cr>
+" }
